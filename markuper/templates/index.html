@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+        }
+        
+        .photo {
+            max-width: 100%;
+            max-height: 66.66vh;
+            width: auto;
+            height: auto;
+        }
+        
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        
+        .button {
+            margin: 0.5rem 0;
+            padding: 0.5rem 1rem;
+            background-color: #ff4646;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .button:hover {
+            background-color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="photo" class="photo" src="" alt="Фотография">
+        <div class="buttons">
+            <button  class="button" onclick="likePhoto()">Лайк</button>
+            <button  class="button" onclick="dislikePhoto()">Дизлайк</button>
+            <button  class="button" onclick="skipPhoto()">Удалить</button>
+        </div>
+    </div>
+    
+    <script>
+        const photoElement = document.getElementById("photo");
+
+        showNextPhoto();
+
+        // Отображение следующей фотографии
+        function showNextPhoto() {
+            fetch("/next")
+            .then(response => response.json())
+            .then(data => {
+                photoElement.src = `/static/${data.id}`;
+            });
+        }
+
+        function likePhoto() {            
+            fetch(`/label/${1}`, { method: "POST" })
+                .then(response => response.json())
+                .then(data => console.log(data));
+            showNextPhoto();
+        }
+
+        function dislikePhoto() {            
+            fetch(`/label/${0}`, { method: "POST" })
+                .then(response => response.json())
+                .then(data => console.log(data));
+            showNextPhoto();
+        }
+
+        function skipPhoto() {            
+            fetch(`/label/${-1}`, { method: "POST" })
+                .then(response => response.json())
+                .then(data => console.log(data));
+            showNextPhoto();
+        }
+        
+    </script>
+    
+</body>
+</html>
